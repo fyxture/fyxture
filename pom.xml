@@ -223,4 +223,16 @@
       <url>http://demoiselle.sourceforge.net/repository/snapshot</url>
     </repository>
   </repositories>
+
+  <distributionManagement>
+    <repository>
+      <id>bintray</id>
+      <url>https://api.bintray.com/maven/mestihudson/maven/fyxture;publish=1</url>
+    </repository>
+    <snapshotRepository>
+      <id>jfrog-snapshots</id>
+      <url>http://oss.jfrog.org/artifactory/oss-snapshot-local</url>
+    </snapshotRepository>
+  </distributionManagement>
+
 </project>
