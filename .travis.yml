@@ -1,7 +1,6 @@
 language: java
 
-after_success:
-  - mvn deploy --settings settings.xml
+script: mvn deploy --settings settings.xml
 
 env:
   global:
