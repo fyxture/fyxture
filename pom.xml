@@ -84,7 +84,7 @@
 
   <profiles>
     <profile>
-      <id>war<id>
+      <id>war</id>
       <build>
         <plugins>
           <plugin>
@@ -116,7 +116,7 @@
       </build>
     </profile>
     <profile>
-      <id>db<id>
+      <id>db</id>
       <build>
         <plugins>
           <plugin>
