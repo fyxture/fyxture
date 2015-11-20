@@ -1,57 +1,31 @@
 package org.fyxture;
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
-import java.util.regex.*;
-import org.apache.commons.io.*;
-import org.apache.tools.ant.taskdefs.*;
-import org.apache.tools.ant.*;
+public class Db {
+  private FileRepository repository;
+  private SQLExecutor executor;
 
-public class Db extends Loadable {
-  private final String driver;
-  private final String url;
-  private final String username;
-  private final String password;
-
-  public Db(Fyxture patern, Properties properties, String name) throws Throwable {
-    super(patern);
-    this.driver = (String)properties.get("fyxture.db." + name + ".driver");
-    this.url = (String)properties.get("fyxture.db." + name + ".url");
-    this.username = (String)properties.get("fyxture.db." + name + ".username");
-    this.password = (String)properties.get("fyxture.db." + name + ".password");
+  public Db(FileRepository repository, SQLExecutor executor) {
+    this.repository = repository;
+    this.executor = executor;
   }
 
-  public Loadable remove(String... names) throws Throwable {
-    throw new UnsupportedOperationException();
+  public void load(String name) {
+    executor.go(compile(repository.get(name)));
   }
 
-  public Loadable load(String name, Object... parameters) throws Throwable {
-    String content = fyxture(name, parameters);
-    File temp = File.createTempFile("db.", ".fyxture");
-    FileUtils.writeStringToFile(temp, content);
-    execute(temp);
-    temp.deleteOnExit();
-    return this;
-  }
-
-  private void execute(File file) throws Throwable {
-    final class Executor extends SQLExec {
-      public Executor() {
-        Project project = new Project();
-        project.init();
-        setProject(project);
-        setTaskType("sql");
-        setTaskName("sql");
+  private String compile(String content){
+    String result = "";
+    String [] lines = content.split("\n");
+    for(int i = 0, l = lines.length; i < l; i++){
+      String line = lines[i];
+      if(line.charAt(0) == '!') {
+        String next = line.substring(1);
+        result += compile(repository.get(next));
+      }
+      if(i + 1 < l) {
+        result += "\n";
       }
     }
-    Executor executor = new Executor();
-    executor.setDriver(driver);
-    executor.setUrl(url);
-    executor.setUserid(username);
-    executor.setPassword(password);
-    executor.setSrc(file);
-    executor.addText("");
-    executor.execute();
+    return result;
   }
 }
