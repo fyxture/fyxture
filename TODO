@@ -1,0 +1,56 @@
+DbITest
+  trivial
+    limpar
+      DELETE FROM ALUNO;
+    load limpar
+    DELETE FROM ALUNO;
+
+  com parâmetros
+    limpar
+      DELETE FROM {0};
+    load limpar, ALUNO
+    DELETE FROM ALUNO;
+
+  com um nível de referência
+    limpar
+      !limpar/delete
+    limpar/delete ->
+      DELETE FROM ALUNO;
+    load limpar
+    DELETE FROM ALUNO;
+
+  com vários elementos e um nível de referência
+    limpar
+      !limpar/delete-tables
+      !sequence/drop-sequences
+    limpar/delete-tables
+      DELETE FROM ALUNO;
+      DELETE FROM DISCIPLINA;
+    sequence/drop-sequences
+      DROP SEQUENCE SQ_ID_ALUNO;
+      DROP SEQUENCE SQ_ID_DISCIPLINA;
+    load limpar
+    DELETE FROM ALUNO
+    DELETE FROM DISCIPLINA
+    DROP SEQUENCE SQ_ID_ALUNO
+    DROP SEQUENCE SQ_ID_DISCIPLINA
+
+  com dois níveis de referência
+    limpar
+      !limpar/delete-tables
+    limpar/delete-tables
+      !limpar/delete-table
+    limpar/delete-table
+      DELETE FROM ALUNO;
+    load limpar
+    DELETE FROM ALUNO;
+
+  passando parâmetros em uma referência
+    limpar
+      !limpar/delete-tables
+    limpar/delete-tables
+      !limpar/delete-table: ALUNO
+    limpar/delete-table
+      DELETE FROM {0};
+    load limpar
+    DELETE FROM ALUNO;
