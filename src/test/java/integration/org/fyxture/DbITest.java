@@ -2,94 +2,106 @@ package integration.org.fyxture;
 
 import org.fyxture.*;
 import org.junit.*;
+import org.mockito.*;
 
 import static org.mockito.Mockito.*;
 import static org.mockito.Matchers.*;
 
 public class DbITest {
-  @Test public void trivial() {
-    given:;
-      FileRepository repository = mock(FileRepository.class);
-      when(repository.get("limpar")).thenReturn("DELETE FROM ALUNO;");
+  @InjectMocks Db db;
 
-      SQLExecutor executor = mock(SQLExecutor.class);
+  @Mock private FileRepository repository;
 
-      Db db = new Db(repository, executor);
+  @Mock private SQLExecutor executor;
 
-    when:;
-      db.load("limpar");
-
-    then:;
-      String content = "DELETE FROM ALUNO;";
-      verify(executor).go(content);
+  @Before public void initMocks() {
+    MockitoAnnotations.initMocks(this);
   }
 
-  // @Test public void com_parâmetros() {
-  //   given:;
-  //     FileRepository repository = mock(FileRepository.class);
-  //     when(repository.get("limpar")).thenReturn("DELETE FROM {0};");
+  @Test public void trivial() {
+    given:;
+      when(repository.get(file("limpar"))).thenReturn(content("DELETE FROM ALUNO;"));
 
-  //     SQLExecutor executor = mock(SQLExecutor.class);
+    when:;
+      db.load(file("limpar"));
 
-  //     Db db = new Db(repository, executor);
+    then:;
+      verify(executor).go(result("DELETE FROM ALUNO;"));
+  }
 
-  //   when:;
-  //     db.load("limpar", "ALUNO");
+  @Test public void com_parâmetros() {
+    given:;
+      when(repository.get(file("limpar"))).thenReturn(content("DELETE FROM {0};"));
 
-  //   then:;
-  //     String content = "DELETE FROM ALUNO;";
-  //     verify(executor).go(content);
-  // }
+    when:;
+      db.load(file("limpar"), param("ALUNO"));
 
-  // @Test public void com_um_nível_de_referência() {
-  //   given:;
-  //     FileRepository repository = mock(FileRepository.class);
-  //     when(repository.get("limpar")).thenReturn("!limpar/delete");
-  //     when(repository.get("limpar/delete")).thenReturn("DELETE FROM ALUNO;");
+    then:;
+      verify(executor).go(result("DELETE FROM ALUNO;"));
+  }
 
-  //     SQLExecutor executor = mock(SQLExecutor.class);
+  private String file(String value) {
+    return value;
+  }
 
-  //     Db db = new Db(repository, executor);
+  private String content(String value) {
+    return value;
+  }
 
-  //   when:;
-  //     db.load("limpar");
+  private String result(String value) {
+    return value;
+  }
 
-  //   then:;
-  //     String content = "DELETE FROM ALUNO;";
-  //     verify(executor).go(content);
-  // }
+  private Object param(Object value) {
+    return value;
+  }
 
-  // @Test public void com_vários_elementos_e_um_nível_de_referência() {
-  //   given:;
-  //     FileRepository repository = mock(FileRepository.class);
-  //     when(repository.get("limpar")).thenReturn(
-  //       "!limpar/delete-tables\n" +
-  //       "!sequence/drop-sequences"
-  //     );
-  //     when(repository.get("limpar/delete-tables")).thenReturn(
-  //       "DELETE FROM ALUNO;\n" +
-  //       "DELETE FROM DISCIPLINA;"
-  //     );
-  //     when(repository.get("sequence/drop-sequences")).thenReturn(
-  //       "DROP SEQUENCE SQ_ID_ALUNO;\n" +
-  //       "DROP SEQUENCE SQ_ID_DISCIPLINA;"
-  //     );
+  @Test public void com_um_nível_de_referência() {
+    given:;
+      when(repository.get(file("limpar"))).thenReturn(content("!limpar/delete"));
+      when(repository.get(file("limpar/delete"))).thenReturn(content("DELETE FROM ALUNO;"));
 
-  //     SQLExecutor executor = mock(SQLExecutor.class);
+    when:;
+      db.load(file("limpar"));
 
-  //     Db db = new Db(repository, executor);
+    then:;
+      verify(executor).go(result("DELETE FROM ALUNO;"));
+  }
 
-  //   when:;
-  //     db.load("limpar");
+  @Test public void com_vários_elementos_e_um_nível_de_referência() {
+    given:;
+      when(repository.get(file("limpar"))).thenReturn(
+        content(
+          "!limpar/delete-tables\n" +
+          "!sequence/drop-sequences"
+        )
+      );
+      when(repository.get(file("limpar/delete-tables"))).thenReturn(
+        content(
+          "DELETE FROM ALUNO;\n" +
+          "DELETE FROM DISCIPLINA;"
+        )
+      );
+      when(repository.get(file("sequence/drop-sequences"))).thenReturn(
+        content(
+          "DROP SEQUENCE SQ_ID_ALUNO;\n" +
+          "DROP SEQUENCE SQ_ID_DISCIPLINA;"
+        )
+      );
 
-  //   then:;
-  //     String content =
-  //       "DELETE FROM ALUNO;\n" +
-  //       "DELETE FROM DISCIPLINA;\n" +
-  //       "DROP SEQUENCE SQ_ID_ALUNO;\n" +
-  //       "DROP SEQUENCE SQ_ID_DISCIPLINA;";
-  //     verify(executor).go(content);
-  // }
+    when:;
+      db.load(file("limpar"));
+
+    then:;
+      verify(executor).go(
+        result(
+          "DELETE FROM ALUNO;\n" +
+          "DELETE FROM DISCIPLINA;\n" +
+          "DROP SEQUENCE SQ_ID_ALUNO;\n" +
+          "DROP SEQUENCE SQ_ID_DISCIPLINA;"
+        )
+      );
+  }
 
   // @Test public void com_dois_níveis_de_referência() {
   //   given:;

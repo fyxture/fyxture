@@ -8,6 +8,8 @@ public class Line {
   private String content;
   private String compiled;
   private boolean literal;
+  private String file;
+  private String args;
 
   public Line(String content) {
     this.content = content;
@@ -15,12 +17,16 @@ public class Line {
     process();
   }
 
-
   private void process() {
-    String pattern = "^\\!(([\\w][\\w\\-]*)(\\/[\\w][\\w\\-]*)*)((\\:(.*))|(\\s+))$";
+    String pattern = "^\\!(\\s*)(([\\w][\\w\\-]*)(\\/[\\w][\\w\\-]*)*)(\\s*)((\\:(.*))|(\\s*))$";
     Matcher matcher = Pattern.compile(pattern).matcher(content);
-    literal = !matcher.find();
-    compiled = content;
+    if(!(this.literal = !matcher.find())) {
+      this.file = matcher.group(2);
+      this.args = matcher.group(8);
+      compiled = '!' + this.file + ':' + (this.args == null ? "" : this.args);
+    }else{
+      compiled = content;
+    }
   }
 
   public String fill(Object... parameters) {
@@ -28,6 +34,14 @@ public class Line {
   }
 
   public boolean literal() {
-    return literal;
+    return this.literal;
+  }
+
+  public String file() {
+    return this.file;
+  }
+
+  public String args() {
+    return this.args;
   }
 }

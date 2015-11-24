@@ -21,7 +21,11 @@ public class Db {
     for(int i = 0, l = lines.length; i < l; i++) {
       Line line = new Line(lines[i]);
       //String line = lines[i];
-      result += line.fill(parameters);
+      if(line.literal()) {
+        result += line.fill(parameters);
+      }else{
+        result += compile(repository.get(line.file()), parameters);
+      }
       // if(line.charAt(0) == '!') {
       //   String next = line.substring(1);
       //   result += compile(repository.get(next), parameters);
