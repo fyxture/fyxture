@@ -6,13 +6,19 @@ import java.util.regex.*;
 
 public class Line {
   private String content;
+  private Object [] parameters;
   private String compiled;
   private boolean literal;
   private String file;
   private String args;
 
   public Line(String content) {
+    this(content, new Object[]{});
+  }
+
+  public Line(String content, Object... parameters) {
     this.content = content;
+    this.parameters = parameters;
     this.compiled = "";
     process();
   }
@@ -27,10 +33,11 @@ public class Line {
     }else{
       compiled = content;
     }
+    fill();
   }
 
-  public String fill(Object... parameters) {
-    return MessageFormat.format(this.compiled, parameters);
+  public String fill() {
+    return MessageFormat.format(this.args, this.parameters);
   }
 
   public boolean literal() {

@@ -14,6 +14,22 @@ public class DbITest {
 
   @Mock private SQLExecutor executor;
 
+  private String file(String value) {
+    return value;
+  }
+
+  private String content(String value) {
+    return value;
+  }
+
+  private String result(String value) {
+    return value;
+  }
+
+  private Object param(Object value) {
+    return value;
+  }
+
   @Before public void initMocks() {
     MockitoAnnotations.initMocks(this);
   }
@@ -38,22 +54,6 @@ public class DbITest {
 
     then:;
       verify(executor).go(result("DELETE FROM ALUNO;"));
-  }
-
-  private String file(String value) {
-    return value;
-  }
-
-  private String content(String value) {
-    return value;
-  }
-
-  private String result(String value) {
-    return value;
-  }
-
-  private Object param(Object value) {
-    return value;
   }
 
   @Test public void com_um_nível_de_referência() {
@@ -103,41 +103,29 @@ public class DbITest {
       );
   }
 
-  // @Test public void com_dois_níveis_de_referência() {
-  //   given:;
-  //     FileRepository repository = mock(FileRepository.class);
-  //     when(repository.get("limpar")).thenReturn("!limpar/delete-tables");
-  //     when(repository.get("limpar/delete-tables")).thenReturn("!limpar/delete-table");
-  //     when(repository.get("limpar/delete-table")).thenReturn("DELETE FROM ALUNO;");
+  @Test public void com_dois_níveis_de_referência() {
+    given:;
+      when(repository.get(file("limpar"))).thenReturn(content("!limpar/delete-tables"));
+      when(repository.get(file("limpar/delete-tables"))).thenReturn(content("!limpar/delete-table"));
+      when(repository.get(file("limpar/delete-table"))).thenReturn(content("DELETE FROM ALUNO;"));
 
-  //     SQLExecutor executor = mock(SQLExecutor.class);
+    when:;
+      db.load(file("limpar"));
 
-  //     Db db = new Db(repository, executor);
+    then:;
+      verify(executor).go(result("DELETE FROM ALUNO;"));
+  }
 
-  //   when:;
-  //     db.load("limpar");
+  @Test public void passando_parâmetros_em_uma_referência() {
+    given:;
+      when(repository.get(file("limpar"))).thenReturn(content("!limpar/delete-tables"));
+      when(repository.get(file("limpar/delete-tables"))).thenReturn(content("!limpar/delete-table: ALUNO"));
+      when(repository.get(file("limpar/delete-table"))).thenReturn(content("DELETE FROM {0};"));
 
-  //   then:;
-  //     String content = "DELETE FROM ALUNO;";
-  //     verify(executor).go(content);
-  // }
+    when:;
+      db.load(file("limpar"));
 
-  // @Test public void passando_parâmetros_em_uma_referência() {
-  //   given:;
-  //     FileRepository repository = mock(FileRepository.class);
-  //     when(repository.get("limpar")).thenReturn(File.create("limpar").line("!limpar/delete-tables"));
-  //     when(repository.get("limpar/delete-tables")).thenReturn(File.create("limpar/delete-tables").line("!limpar/delete-table: ALUNO"));
-  //     when(repository.get("limpar/delete-table")).thenReturn(File.create("limpar/delete-table").line("DELETE FROM {0};"));
-
-  //     SQLExecutor executor = mock(SQLExecutor.class);
-
-  //     Db db = new Db(repository, executor);
-
-  //   when:;
-  //     db.load("limpar");
-
-  //   then:;
-  //     String content = "DELETE FROM ALUNO;";
-  //     verify(executor).go(content);
-  // }
+    then:;
+      verify(executor).go(result("DELETE FROM ALUNO;"));
+  }
 }

@@ -38,7 +38,7 @@
     <appender-ref ref="LOG-CONSOLE" />
   </category>
 
-  <category name="com.fyxture">
+  <category name="org.fyxture">
     <priority value="info" />
     <appender-ref ref="LOG-FILE" />
     <appender-ref ref="LOG-CONSOLE" />

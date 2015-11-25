@@ -1,17 +1,17 @@
 DbITest
-  trivial
+  #trivial
     limpar
       DELETE FROM ALUNO;
     load limpar
     DELETE FROM ALUNO;
 
-  com parâmetros
+  #com parâmetros
     limpar
       DELETE FROM {0};
     load limpar, ALUNO
     DELETE FROM ALUNO;
 
-  com um nível de referência
+  #com um nível de referência
     limpar
       !limpar/delete
     limpar/delete ->
@@ -19,7 +19,7 @@ DbITest
     load limpar
     DELETE FROM ALUNO;
 
-  com vários elementos e um nível de referência
+  #com vários elementos e um nível de referência
     limpar
       !limpar/delete-tables
       !sequence/drop-sequences
@@ -35,7 +35,7 @@ DbITest
     DROP SEQUENCE SQ_ID_ALUNO
     DROP SEQUENCE SQ_ID_DISCIPLINA
 
-  com dois níveis de referência
+  #com dois níveis de referência
     limpar
       !limpar/delete-tables
     limpar/delete-tables
@@ -45,7 +45,7 @@ DbITest
     load limpar
     DELETE FROM ALUNO;
 
-  passando parâmetros em uma referência
+  #passando parâmetros em uma referência
     limpar
       !limpar/delete-tables
     limpar/delete-tables
