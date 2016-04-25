@@ -7,6 +7,7 @@ import org.mockito.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.Matchers.*;
 
+@Ignore
 public class DbITest {
   @InjectMocks Db db;
 

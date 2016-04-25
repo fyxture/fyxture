@@ -51,4 +51,12 @@ public class Line {
   public String args() {
     return this.args;
   }
+
+  public static Line create(String content) {
+    return new Line(content);
+  }
+
+  public static Line create(String content, Object... parameters) {
+    return new Line(content, parameters);
+  }
 }
