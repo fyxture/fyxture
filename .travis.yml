@@ -9,7 +9,7 @@ branches:
 
 deploy:
   provider: bintray
-  file: "descritor.json"
+  file: "descriptor.json"
   provider: bintray
   on: new-philosofy
   key:
