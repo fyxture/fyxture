@@ -25,13 +25,6 @@ public class FyxtureDb {
     this.files = new HashMap<String, Liquibase>();
   }
 
-  public static FyxtureDb db(String name) throws Throwable {
-    if(!dbs.containsKey(name)) {
-      dbs.put(name, new FyxtureDb(name));
-    }
-    return dbs.get(name);
-  }
-
   public FyxtureDb go(String file) throws Throwable {
     liquibase(file).update(contexts("test"));
     return this;
@@ -51,7 +44,7 @@ public class FyxtureDb {
   }
 
   private Database database() throws Throwable {
-    return (Database) DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection()));
+    return DatabaseFactory.getInstance().findCorrectDatabaseImplementation(new JdbcConnection(connection()));
   }
 
   private Liquibase liquibase(String file) throws Throwable {
@@ -61,6 +54,13 @@ public class FyxtureDb {
       files.put(file, lb);
     }
     return files.get(file);
+  }
+
+  public static FyxtureDb db(String name) throws Throwable {
+    if(!dbs.containsKey(name)) {
+      dbs.put(name, new FyxtureDb(name));
+    }
+    return dbs.get(name);
   }
 
   public static void main(String... args) throws Throwable {

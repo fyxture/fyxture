@@ -24,12 +24,12 @@ public class FyxtureProperties {
 
   public String get(String key) throws Throwable {
     if(properties == null) {
-      loadProperties();
+      load();
     }
     return properties.getProperty(key);
   }
 
-  private void loadProperties() throws Throwable {
+  private void load() throws Throwable {
     properties = new Properties();
     properties.load(FyxtureFile.file(name + ".properties").stream());
   }

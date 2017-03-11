@@ -22,4 +22,12 @@ public class Fyxture {
   public static FyxtureFile file(String name) throws Throwable {
     return FyxtureFile.file(name);
   }
+
+  public static FyxtureYaml yaml(String name) throws Throwable {
+    return FyxtureYaml.yaml(name);
+  }
+  // 
+  // public static FyxtureJson json(String name) throws Throwable {
+  //   return FyxtureJson.json(name);
+  // }
 }

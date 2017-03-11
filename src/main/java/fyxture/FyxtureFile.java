@@ -16,6 +16,8 @@ public class FyxtureFile {
   private File file;
   private String content;
   private InputStream stream;
+  private String encoding = "UTF-8";
+  private boolean encodingHadChanged = false;
 
   public static FyxtureFile file(String name) {
     if(!instances.containsKey(name)) {
@@ -44,10 +46,39 @@ public class FyxtureFile {
     return content;
   }
 
+  public String content(String encoding) throws Throwable {
+    encoding(encoding);
+    if(content == null) {
+      _content();
+    }
+    return content;
+  }
+
   public InputStream stream() throws Throwable {
     if(stream == null) {
       stream = new FileInputStream(file);
     }
     return stream;
+  }
+
+  private FyxtureFile encoding(String encoding) {
+    if(encoding != null && this.encoding != null && !this.encoding.equals(encoding)) {
+      this.encoding = encoding;
+      encodingHadChanged(true);
+    }
+    return this;
+  }
+
+  private boolean encodingHadChanged() {
+    return this.encodingHadChanged;
+  }
+
+  private void encodingHadChanged(boolean encodingHadChanged) {
+    this.encodingHadChanged = encodingHadChanged;
+  }
+
+  private void _content() throws Throwable {
+    content = FileUtils.readFileToString(file, encoding);
+    encodingHadChanged(false);
   }
 }

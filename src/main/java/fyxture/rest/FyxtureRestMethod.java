@@ -1,49 +1,32 @@
-package fyxture;
+package fyxture.rest;
 
+
+import fyxture.Fyxture;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.logging.Logger;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.activiti.engine.impl.util.json.JSONObject;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.client.methods.HttpEntityEnclosingRequestBase;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.jose4j.json.internal.json_simple.JSONValue;
+import org.json.JSONObject;
 import org.yaml.snakeyaml.Yaml;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 public abstract class FyxtureRestMethod {
-  private static final Logger LOGGER = LogManager.getLogger(FyxtureRestMethod.class.getName());
-
+  private static final Logger LOGGER = Logger.getLogger(FyxtureRestMethod.class.getName());
   protected String url;
   String path;
   String contentType;
   Map<String, String> params = new HashMap<String, String>();
   HttpResponse response;
   String responseContent;
-
-  protected FyxtureRestMethod(String url) {
-    this.url = url;
-  }
-
-  private String content(String path) throws Throwable {
-    return Fyxture.file(path).content();
-  }
-
-  private String yamlTojson(String path) throws Throwable {
-    String content = content(path);
-    Object yaml = new Yaml().load(content);
-    String stringified = JSONValue.toJSONString(yaml);
-    return stringified;
-  }
 
   public FyxtureRestMethod body(String path) throws Throwable {
     this.path = path;
@@ -61,8 +44,10 @@ public abstract class FyxtureRestMethod {
   }
 
   public FyxtureRestMethod go() throws Throwable {
-    HttpEntityEnclosingRequestBase request = request();
-    entity(request);
+    HttpRequestBase request = request();
+    if(request instanceof HttpEntityEnclosingRequestBase) {
+      entity((HttpEntityEnclosingRequestBase)request);
+    }
     LOGGER.info(request.toString());
 
     DefaultHttpClient client = new DefaultHttpClient();
@@ -71,27 +56,6 @@ public abstract class FyxtureRestMethod {
     LOGGER.info(raw());
     client.getConnectionManager().shutdown();
     return this;
-  }
-
-  protected abstract HttpEntityEnclosingRequestBase request() throws Throwable;
-
-  private void entity(HttpEntityEnclosingRequestBase request) throws Throwable {
-    if(path != null) {
-      String stringified = path.endsWith(".yml") ? yamlTojson(path) : content(path);
-      StringEntity entity = new StringEntity(stringified);
-      if(contentType != null) {
-        entity.setContentType(contentType);
-      }
-      request.setEntity(entity);
-    }
-  }
-
-  protected URIBuilder uriBuilder() throws Throwable {
-    URIBuilder builder = new URIBuilder(url);
-    for(String key : params.keySet()) {
-      builder.addParameter(key, params.get(key));
-    }
-    return builder;
   }
 
   public HttpResponse response() {
@@ -113,5 +77,41 @@ public abstract class FyxtureRestMethod {
 
   public JSONObject json() throws Throwable {
     return new JSONObject(raw());
+  }
+
+  protected abstract HttpRequestBase request() throws Throwable;
+
+  protected URIBuilder uriBuilder() throws Throwable {
+    URIBuilder builder = new URIBuilder(url);
+    for(String key : params.keySet()) {
+      builder.addParameter(key, params.get(key));
+    }
+    return builder;
+  }
+
+  protected FyxtureRestMethod(String url) {
+    this.url = url;
+  }
+
+  private String content() throws Throwable {
+    return Fyxture.file(path).content();
+  }
+
+  private String yamlTojson() throws Throwable {
+    return Fyxture.yaml(path).json();
+  }
+
+  private void entity(HttpEntityEnclosingRequestBase request) throws Throwable {
+    if(path != null) {
+      StringEntity entity = new StringEntity(load());
+      if(contentType != null) {
+        entity.setContentType(contentType);
+      }
+      request.setEntity(entity);
+    }
+  }
+
+  private String load() throws Throwable {
+    return path.endsWith(".yml") ? yamlTojson() : content();
   }
 }
