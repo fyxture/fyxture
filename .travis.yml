@@ -11,3 +11,7 @@ branches:
   only:
     - master
     - new-philosofy
+
+deploy:
+  on:
+    branch: master
