@@ -10,3 +10,4 @@ env:
 branches:
   only:
     - master
+    - new-philosofy
