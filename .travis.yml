@@ -1,17 +1,14 @@
 language: java
-
 script: mvn install
-
 branches:
   only:
     - master
     - new-philosofy
-
 deploy:
   provider: bintray
   file: "descriptor.json"
-  provider: bintray
   on: new-philosofy
-  user: "mestihudson"
+  user:
+    secure: T3+el7hZvHQxTiJ8Oq/0D8IksYwbE/q8MU1ChMr07yrinCUlVk39qXq+ErVYL4CFOx2JEwLe66FfQdhQ/BgC8pbYZzp3U/hFnOjIccWrosU0kIlbMvrMf+hIhNhb+lpG71VoJPt8feWIUI5PwawSTkwV9AMSJ55Po6uhHWPFUGUXjAvgzv5q4UIMENQzE3lCEmZg4yyWwvToes6F++IzYXtEeqY9ZlHOUpgrugDT026YpQUalkZlFOJOvg+Juff2753+2wZRCoTC5EndHvUSb0duzRWBigLry2hyqKXDqo0YbWneg5x2jeC82e843u07Qh1K0j+xSWmh0h7W6ebEqjZyO69nHTedWoyj4fQ03qO6VsTuK+q9lEJ3C8bV4Kx8fXFNOey6BXuEEfirNx/x+zrrgyuj3rkS1TFcw27iSOhGKzLjYFTb7h0keiv0wt2Ar3mOQnhbeMl8FFjMJ0RzI7MVpG0/XIY5yDv95qK3RDpvm5ucU21saope4tfllV3wE+65XeuYXns43vblZ0zpp33b01voxO6o0KThC0QE3Mu0yEURwgOnh/Ev3FDeQh8gYryeR/VZ16ENjjC/xjDvjdIovWFtjJD3XBxlAmiyQ8EWdtgL4YfYnRtCa30mRPIQf5PFUS6+SqzBMJCkgbXas4sYyoRPvZiJZ2YrGQpBpjA=
   key:
     secure: 4NVYM/mMPcbaA0Rsk3wieqQLID91psMezMARk3NVxN5ZytUyu+bj7gnYCVujZLYbrxEICzFoW2bvJzjd6wHKMYaL6nFWYWcflBcEXMX6re0t1CL77Ute4WU3NKg9wSFL623SbjworEDyGLFkA8SGep3cZxgfGI0SkhlR3yiToGYR/GWd7XR+pYQnluzzaaRO8T5BkyiH3kRZVvMiwCepyWaqeFnhbzdzkmOtVHK2S+Ww/rFQ5AE+8O10I/i0qGUMpqbEXsX5QUVkl1Sdm7yBxD/z/FTZ+R0LFA9C1QqmDhLZcRk6ITM+npxZvAbzGWkKyh7foH2oHhA8Qm3odl+/ARu4/mYUtwP5hWY1Btu5a6A+zfmP/74qUGNoxIvRIOPJqfytoYFxowTFIUfXX+VaSVTzpTypNPZFjSFdLx8QQmpUeYAqNPRMGGOPlGmwPziqxbZuylYn0m+VlC2F9JTgysB2VLd04N5A+lxm/8ht4xjm68BhIq8RDQ8pyFHYt+vuHthi+T6JRw16yWSepmliHdvgfbJS6LbCQuIt1R/w22NCtxljadsPBdiOuj5QsrAP+hAhlr4DcD3eqOQpG7EGWMeXdiazD4m2qCxlHW6snOP9AfztIo4avDBPSWq5e2p7zq8+spyRqepfM2BhAAY5qdP7SlWehYXxX4vWY5au++E=

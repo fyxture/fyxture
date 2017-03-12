@@ -62,7 +62,6 @@
 
   <build>
     <defaultGoal>clean verify</defaultGoal>
-    <finalName>${project.artifactId}</finalName>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -92,7 +91,6 @@
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <demoiselle-behave-version>1.5.1</demoiselle-behave-version>
   </properties>
 
   <distributionManagement>
