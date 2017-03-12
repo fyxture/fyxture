@@ -1,10 +1,13 @@
 language: java
-script: mvn deploy --settings settings.xml
-env:
-  global:
-    - secure: bbbn29GxXZVjl8lhcJjd/mGI8TtWYGE8QEGXt5SI4KXSmWpQgN9OR+q69I6NT413jsAZwGrkA8O5J4/vW/UxzhViI+nmq/OlVj3/gWornI8Ru4WuIepwz7HhNbKqqqODQH1Xe5ehd3eUA8CrfTMpPgOnaBZstaCecfo0/F0TR6A3UTl45XOVSNUZCZRrqstTxC78SezPd73FGH71QOYaXPynoG/SIyWbe3Dk0GgKVZ9bWx/54RSU5aI90L8UZV32sdXpZqO8mGLFaXvdxgVsDtEtTy5QhRAMEXu5BEQij10X2KrzMLSCh0QIeLhBvxHHL69IQNrDeT1QacPRNJKP2uvCTNrJAhBcWv32Pc0fZhzScfbwqFzjK3T3uOU+QafdKXJ0NELJQ1HK5SZmwUsvOtp7ULGrYPOFMO6a96ucTbRk4VNqvDq9Ba8npT3Fdt9F8H+TTfeCKAAI4unTXlKZuFgmDnuFppbaUjRUwNYQGV/VdLOzF34L4D+/qdH5xuH9d8P9NnqP1DJCsvyzSMgPAs+skoAr3zu9UCy1MxL5bG1UJjpdoLV+p/ZH+luBA4aZBBgaaifhaY1U/JB8aK/5ugGPBvuPf2R0cY9lZrJKI4iZP/oZsj+TtYxCXh9sO/Ml2ZzJKIuAefGbS8VihEJMPFOm5VHgZsjcx41LxRBT4JA=
-    - secure: GLoroMm3HQHKDPdryACTh/ssC51g4alC+YkrjxtaAf7Gnx1mRgVdb3bEPHEZ8xYUqPPys5usOJ91o4trYUQG0yysf/MxFgnpO0qyXI3J/ogtVlgUqc1AXAp1kky9PHURi5V5SxQM8bcJfXB3PeCf+9QYC/PD71bHoQ6AgoTSGveuYpVmk+kEdFI4xiCV0+2XzNlwyPuoVe1JlEUdhhmj1HAuwns28IQeB3X6V9ylWBwMHybv2WQKESk/DbY8HWfKdP058QRuJtiXbS4bBABasauTWiaFWlBoltSfe1uNZ7rrgXll3rSDTb9ttJrxzbFuCLvVRbzBSqici1zHbiTReftUIy3DnFRITkOZKCg6z8iZJfvFJud3YhGyHMo3E6PKsubKWL40yi9hvF/B2dLxi6cE28ee6/Umol9mAUa65vyQdisnyeyXWRVAGtEsLqvLki6Z21599VtElWMAvsdMyJafKALPVQwTc4qQmLLloQ/PmatrBrw4lyUoBuQondIddrptqtUH/yhh7+KDXvvBT2uG+e9kQSGtYmQtyh+MCY54zYQKg/P4REfDx7Nu0OMiDyXgrRHzhXU00c+EyX602UzVO8rRIl/UKaOrvfeueHFYjALaGMdXbFhcB/0VwGJZbJqU723C+gOeBdlIfETxo6k2K5/cv62PI7KJnMTgzu0=
+
+cache:
+  directories:
+    - $HOME/.m2
+
+script: mvn install
+
+after_success: mvn deploy --settings settings.xml
 
 branches:
   only:
-    - new-philosofy
+    - bintray
