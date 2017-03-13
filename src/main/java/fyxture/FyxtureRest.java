@@ -11,31 +11,37 @@ import fyxture.rest.Trace;
 
 
 public class FyxtureRest {
-  public Delete delete(String url) {
+  private String url;
+
+  public FyxtureRest(String url) {
+    this.url = url;
+  }
+
+  public Delete delete() {
     return Delete.create(url);
   }
 
-  public Get get(String url) {
+  public Get get() {
     return Get.create(url);
   }
 
-  public Head head(String url) {
+  public Head head() {
     return Head.create(url);
   }
 
-  public Options options(String url) {
+  public Options options() {
     return Options.create(url);
   }
 
-  public Post post(String url) {
-    return Post.create(url);
+  public Post post(String path) throws Throwable {
+    return ((Post)(Post.create(url).body(path)));
   }
 
-  public Put put(String url) {
-    return Put.create(url);
+  public Put put(String path) throws Throwable {
+    return ((Put)(Put.create(url).body(path)));
   }
 
-  public Trace trace(String url) {
+  public Trace trace() {
     return Trace.create(url);
   }
 }

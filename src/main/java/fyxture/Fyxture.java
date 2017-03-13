@@ -11,8 +11,8 @@ public class Fyxture {
     return FyxtureDb.db(name);
   }
 
-  public static FyxtureRest rest() {
-    return new FyxtureRest();
+  public static FyxtureRest rest(String url) {
+    return new FyxtureRest(url);
   }
 
   public static FyxtureProperties properties(String name) throws Throwable {
@@ -26,7 +26,7 @@ public class Fyxture {
   public static FyxtureYaml yaml(String name) throws Throwable {
     return FyxtureYaml.yaml(name);
   }
-  // 
+  //
   // public static FyxtureJson json(String name) throws Throwable {
   //   return FyxtureJson.json(name);
   // }
