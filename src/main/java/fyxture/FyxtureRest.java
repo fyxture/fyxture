@@ -34,11 +34,19 @@ public class FyxtureRest {
   }
 
   public Post post(String path) throws Throwable {
-    return ((Post)(Post.create(url).body(path)));
+    return ((Post)(post().body(path)));
+  }
+
+  public Post post() {
+    return Post.create(url);
   }
 
   public Put put(String path) throws Throwable {
-    return ((Put)(Put.create(url).body(path)));
+    return ((Put)(put().body(path)));
+  }
+
+  public Put put() {
+    return Put.create(url);
   }
 
   public Trace trace() {
