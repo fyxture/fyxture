@@ -4,5 +4,6 @@ script: mvn install
 
 after_success: mvn deploy --settings settings.xml
 
-deploy:
-  on: master
+branches:
+  only:
+  - master
