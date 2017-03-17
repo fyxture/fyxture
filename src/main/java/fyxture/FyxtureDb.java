@@ -37,6 +37,7 @@ public class FyxtureDb {
 
   private Connection connection() throws Throwable {
     //TODO: trocar referencia inline por configuracao em arquivo de propriedades padrão
+    
     Class.forName(property("driver"));
     return DriverManager.getConnection(property("url"), property("username"), property("password"));
   }
