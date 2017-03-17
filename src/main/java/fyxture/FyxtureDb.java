@@ -26,6 +26,7 @@ public class FyxtureDb {
   }
 
   public FyxtureDb go(String file) throws Throwable {
+    //TODO: trocar referencia inline por configuracao em arquivo de propriedades padrão
     liquibase(file).update(contexts("test"));
     return this;
   }
@@ -35,8 +36,9 @@ public class FyxtureDb {
   }
 
   private Connection connection() throws Throwable {
+    //TODO: trocar referencia inline por configuracao em arquivo de propriedades padrão
     Class.forName(property("driver"));
-    return DriverManager.getConnection(property("url"), property("user"), property("password"));
+    return DriverManager.getConnection(property("url"), property("username"), property("password"));
   }
 
   private String property(String key) throws Throwable {
