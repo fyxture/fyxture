@@ -1,9 +1,10 @@
 package fyxture;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -39,14 +40,18 @@ public class FyxtureFile {
     return file.getPath();
   }
 
-  public String content() throws Throwable {
+  public String content() throws FyxtureException {
     if(content == null) {
-      content = FileUtils.readFileToString(file, "UTF-8");
+      try {
+        content = FileUtils.readFileToString(file, "UTF-8");
+      } catch(IOException ioe) {
+        throw new FyxtureException(ioe);
+      }
     }
     return content;
   }
 
-  public String content(String encoding) throws Throwable {
+  public String content(String encoding) throws FyxtureException {
     encoding(encoding);
     if(content == null) {
       _content();
@@ -54,9 +59,13 @@ public class FyxtureFile {
     return content;
   }
 
-  public InputStream stream() throws Throwable {
+  public InputStream stream() throws FyxtureException {
     if(stream == null) {
-      stream = new FileInputStream(file);
+      try {
+        stream = new FileInputStream(file);
+      } catch(FileNotFoundException fnfe) {
+        throw new FyxtureException(fnfe);
+      }
     }
     return stream;
   }
@@ -77,8 +86,12 @@ public class FyxtureFile {
     this.encodingHadChanged = encodingHadChanged;
   }
 
-  private void _content() throws Throwable {
-    content = FileUtils.readFileToString(file, encoding);
+  private void _content() throws FyxtureException {
+    try {
+      content = FileUtils.readFileToString(file, encoding);
+    } catch(IOException ioe) {
+      throw new FyxtureException(ioe);
+    }
     encodingHadChanged(false);
   }
 }

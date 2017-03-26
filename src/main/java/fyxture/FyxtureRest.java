@@ -33,7 +33,7 @@ public class FyxtureRest {
     return Options.create(url);
   }
 
-  public Post post(String path) throws Throwable {
+  public Post post(String path) throws FyxtureException {
     return ((Post)(post().body(path)));
   }
 
@@ -41,7 +41,7 @@ public class FyxtureRest {
     return Post.create(url);
   }
 
-  public Put put(String path) throws Throwable {
+  public Put put(String path) throws FyxtureException {
     return ((Put)(put().body(path)));
   }
 

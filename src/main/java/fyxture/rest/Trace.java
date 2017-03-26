@@ -1,6 +1,10 @@
 package fyxture.rest;
 
 
+import fyxture.FyxtureException;
+
+import java.net.URISyntaxException;
+
 import org.apache.http.client.methods.HttpTrace;
 import org.apache.http.client.methods.HttpRequestBase;
 
@@ -14,7 +18,11 @@ public class Trace extends FyxtureRestMethod {
     return new Trace(url);
   }
 
-  protected HttpRequestBase request() throws Throwable {
-    return new HttpTrace(uriBuilder().build());
+  protected HttpRequestBase request() throws FyxtureException {
+    try {
+      return new HttpTrace(uriBuilder().build());
+    } catch (URISyntaxException urise) {
+      throw new FyxtureException(urise);
+    }
   }
 }

@@ -12,26 +12,26 @@ public class FyxtureJson {
   FyxtureFile file;
   JSONObject o;
 
-  public static FyxtureJson json(String name) throws Throwable {
+  public static FyxtureJson json(String name) throws FyxtureException {
     if(!instances.containsKey(name)) {
       instances.put(name, new FyxtureJson(name));
     }
     return instances.get(name);
   }
 
-  private FyxtureJson(String name) throws Throwable {
+  private FyxtureJson(String name) throws FyxtureException {
     this.file = Fyxture.file(name);
   }
 
-  public JSONObject o() throws Throwable {
+  public JSONObject o() throws FyxtureException {
     return _o(null);
   }
 
-  public JSONObject o(String encoding) throws Throwable {
+  public JSONObject o(String encoding) throws FyxtureException {
     return _o(encoding);
   }
 
-  private JSONObject _o(String encoding) throws Throwable {
+  private JSONObject _o(String encoding) throws FyxtureException {
     if(o == null) {
       this.o = new JSONObject(encoding == null ? file.content() : file.content(encoding));
     }

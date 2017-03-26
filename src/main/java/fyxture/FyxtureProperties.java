@@ -1,6 +1,7 @@
 package fyxture;
 
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -15,22 +16,26 @@ public class FyxtureProperties {
     this.name = name;
   }
 
-  public static FyxtureProperties properties(String name) throws Throwable {
+  public static FyxtureProperties properties(String name) throws FyxtureException {
     if(!instances.containsKey(name)) {
       instances.put(name, new FyxtureProperties(name));
     }
     return instances.get(name);
   }
 
-  public String get(String key) throws Throwable {
+  public String get(String key) throws FyxtureException {
     if(properties == null) {
       load();
     }
     return properties.getProperty(key);
   }
 
-  private void load() throws Throwable {
+  private void load() throws FyxtureException {
     properties = new Properties();
-    properties.load(FyxtureFile.file(name + ".properties").stream());
+    try {
+      properties.load(FyxtureFile.file(name + ".properties").stream());
+    } catch (IOException ioe) {
+      throw new FyxtureException(ioe);
+    }
   }
 }

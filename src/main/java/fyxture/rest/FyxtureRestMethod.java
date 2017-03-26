@@ -2,9 +2,13 @@ package fyxture.rest;
 
 
 import fyxture.Fyxture;
+import fyxture.FyxtureException;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.logging.Logger;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +32,7 @@ public abstract class FyxtureRestMethod {
   HttpResponse response;
   String responseContent;
 
-  public FyxtureRestMethod body(String path) throws Throwable {
+  public FyxtureRestMethod body(String path) throws FyxtureException {
     this.path = path;
     return this;
   }
@@ -43,7 +47,7 @@ public abstract class FyxtureRestMethod {
     return this;
   }
 
-  public FyxtureRestMethod go() throws Throwable {
+  public FyxtureRestMethod go() throws FyxtureException {
     HttpRequestBase request = request();
     if(request instanceof HttpEntityEnclosingRequestBase) {
       entity((HttpEntityEnclosingRequestBase)request);
@@ -51,7 +55,11 @@ public abstract class FyxtureRestMethod {
     LOGGER.info(request.toString());
 
     DefaultHttpClient client = new DefaultHttpClient();
-    response = client.execute(request);
+    try {
+      response = client.execute(request);
+    } catch(IOException ioe) {
+      throw new FyxtureException(ioe);
+    }
 
     LOGGER.info(raw());
     client.getConnectionManager().shutdown();
@@ -62,27 +70,37 @@ public abstract class FyxtureRestMethod {
     return response;
   }
 
-  public String raw() throws Throwable {
+  public String raw() throws FyxtureException {
     if(responseContent == null) {
-      BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+      BufferedReader rd;
       StringBuffer result = new StringBuffer();
-      String line = "";
-      while ((line = rd.readLine()) != null) {
-        result.append(line);
+      try {
+        rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+        String line = "";
+        while ((line = rd.readLine()) != null) {
+          result.append(line);
+        }
+      } catch (IOException ioe) {
+        throw new FyxtureException(ioe);
       }
       responseContent = result.toString();
     }
     return responseContent;
   }
 
-  public JSONObject json() throws Throwable {
+  public JSONObject json() throws FyxtureException {
     return new JSONObject(raw());
   }
 
-  protected abstract HttpRequestBase request() throws Throwable;
+  protected abstract HttpRequestBase request() throws FyxtureException;
 
-  protected URIBuilder uriBuilder() throws Throwable {
-    URIBuilder builder = new URIBuilder(url);
+  protected URIBuilder uriBuilder() throws FyxtureException {
+    URIBuilder builder;
+    try {
+      builder = new URIBuilder(url);
+    } catch (URISyntaxException urise) {
+      throw new FyxtureException(urise);
+    }
     for(String key : params.keySet()) {
       builder.addParameter(key, params.get(key));
     }
@@ -93,17 +111,22 @@ public abstract class FyxtureRestMethod {
     this.url = url;
   }
 
-  private String content() throws Throwable {
+  private String content() throws FyxtureException {
     return Fyxture.file(path).content();
   }
 
-  private String yamlTojson() throws Throwable {
+  private String yamlTojson() throws FyxtureException {
     return Fyxture.yaml(path).json();
   }
 
-  private void entity(HttpEntityEnclosingRequestBase request) throws Throwable {
+  private void entity(HttpEntityEnclosingRequestBase request) throws FyxtureException {
     if(path != null) {
-      StringEntity entity = new StringEntity(load());
+      StringEntity entity;
+      try {
+        entity = new StringEntity(load());
+      } catch (UnsupportedEncodingException uee) {
+        throw new FyxtureException(uee);
+      }
       if(contentType != null) {
         entity.setContentType(contentType);
       }
@@ -111,7 +134,7 @@ public abstract class FyxtureRestMethod {
     }
   }
 
-  private String load() throws Throwable {
+  private String load() throws FyxtureException {
     return path.endsWith(".yml") ? yamlTojson() : content();
   }
 }

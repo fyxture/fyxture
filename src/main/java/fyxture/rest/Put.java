@@ -1,6 +1,10 @@
 package fyxture.rest;
 
 
+import fyxture.FyxtureException;
+
+import java.net.URISyntaxException;
+
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.client.methods.HttpRequestBase;
 
@@ -14,7 +18,11 @@ public class Put extends FyxtureRestMethod {
     return new Put(url);
   }
 
-  protected HttpRequestBase request() throws Throwable {
-    return new HttpPut(uriBuilder().build());
+  protected HttpRequestBase request() throws FyxtureException {
+    try {
+      return new HttpPut(uriBuilder().build());
+    } catch (URISyntaxException urise) {
+      throw new FyxtureException(urise);
+    }
   }
 }
